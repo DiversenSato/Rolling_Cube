@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerController : MonoBehaviour
+{
 
 
 
@@ -22,9 +23,13 @@ public class PlayerController : MonoBehaviour {
     public float jumpSpeed;
     public int score;
     public float Timer;
+    public float movementType;
+    public int minPoints;
+    public float boost;
 
 
-    void Start() {
+    void Start()
+    {
 
         rb = this.GetComponent<Rigidbody>();
         score = 0;
@@ -36,9 +41,16 @@ public class PlayerController : MonoBehaviour {
     }
 
 
-    void Update() {
+    void Update()
+    {
+        if (Input.GetKey("escape"))
+        {
+            Application.Quit();
+            print ("Quit requested");
+        }
 
-        if (Input.GetKey(KeyCode.R)) {
+        if (Input.GetKey(KeyCode.R))
+        {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
@@ -63,21 +75,30 @@ public class PlayerController : MonoBehaviour {
             GameOverText.gameObject.SetActive(true);
         }
 
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+           switchMovementType();
+        }
     }
 
 
     //Everything that has to do with physics, should be in here
-    void FixedUpdate() {
+    void FixedUpdate()
+    {
 
-        if (GameOver == false && GameWon == false) {
+        if (GameOver == false && GameWon == false)
+        {
 
-            Movement1();
-            //Movement2();
+            if (movementType == 1)
+            {
+                Movement1();
+            } else if (movementType == 2)
+            {
+            Movement2();
+            }
 
             Jumping();
-
         }
-
     }
 
 
@@ -86,7 +107,8 @@ public class PlayerController : MonoBehaviour {
     //-----------------------------------------------------------------------------------
 
     //Using rigidbody force
-    void Movement1() {
+    void Movement1()
+    {
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
 
@@ -95,7 +117,8 @@ public class PlayerController : MonoBehaviour {
     }
 
     //Using transform.positon
-    void Movement2() {
+    void Movement2()
+    {
         float moveHorizontal = Input.GetAxis("Horizontal"); 
         float moveVertical = Input.GetAxis("Vertical");  
 
@@ -124,10 +147,15 @@ public class PlayerController : MonoBehaviour {
             GameOverText.gameObject.SetActive(true);
         }
 
-        if (other.gameObject.CompareTag("Finish"))
+        if (other.gameObject.CompareTag("Finish") && score >= minPoints && GameOver == false)
         {
             FinishText.gameObject.SetActive(true);
             GameWon = true;
+        }
+        if (other.gameObject.CompareTag("PowerUp"))
+        {
+            Vector3 movement = new Vector3(-100.0f, 0.0f, 0.0f);
+            rb.AddForce(movement * boost);
         }
     }
 
@@ -135,7 +163,8 @@ public class PlayerController : MonoBehaviour {
     //-----------------------------------------------------------------------------------
     //Countdown function
     //-----------------------------------------------------------------------------------
-    void Countdown() {
+    void Countdown()
+    {
 
         Timer -= Time.deltaTime;
 
@@ -147,16 +176,28 @@ public class PlayerController : MonoBehaviour {
     //-----------------------------------------------------------------------------------
     //Jumping Functions
     //-----------------------------------------------------------------------------------
-    void Jumping() {
+    void Jumping()
+    {
         if (Input.GetKey(KeyCode.Space) && IsGrounded())
         {
             rb.AddForce(Vector3.up * jumpSpeed, ForceMode.Impulse);
         }
     }
 
-    bool IsGrounded() {
+    bool IsGrounded()
+    {
          return Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1f);
     }
-   
-}
 
+    //Checks for button press
+    public void switchMovementType()
+    {
+        if (movementType == 1)
+        {
+            movementType = 2;
+        } else if (movementType ==2)
+        {
+            movementType = 1;
+        }
+    }
+}
