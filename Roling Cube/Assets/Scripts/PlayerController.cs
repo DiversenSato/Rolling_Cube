@@ -7,11 +7,11 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
 
-
+    public Text Trap;
 
     private Rigidbody rb;
     private float distToGround;
-    private bool GameOver;
+    public bool GameOver; 
     private bool GameWon;
 
     public Text ScoreText;
@@ -145,6 +145,12 @@ public class PlayerController : MonoBehaviour
             //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             GameOver = true;
             GameOverText.gameObject.SetActive(true);
+        }
+
+        if (other.gameObject.CompareTag("Trap"))
+        {
+            GameOver = true;
+            Trap.gameObject.SetActive(true);
         }
 
         if (other.gameObject.CompareTag("Finish") && score >= minPoints && GameOver == false)

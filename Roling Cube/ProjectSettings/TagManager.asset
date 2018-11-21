@@ -8,6 +8,7 @@ TagManager:
   - Death
   - Platform
   - PowerUp
+  - Trap
   layers:
   - Default
   - TransparentFX

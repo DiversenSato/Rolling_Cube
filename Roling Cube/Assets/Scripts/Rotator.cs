@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rotator : MonoBehaviour {
-
+public class Rotator : MonoBehaviour
+{
 
     public GameObject point1;
     public GameObject point2;
@@ -12,30 +12,15 @@ public class Rotator : MonoBehaviour {
 
     public bool Movement;
 
+	void Update ()
+    {
+
+        this.transform.Rotate(Rotation * Time.deltaTime);
 
 
-	void Start () {
-
-
-        
-	}
-	
-	void Update () {
-
-        this.transform.Rotate(Rotation * Time.deltaTime );
-
-
-        if (Movement == true) {
+        if (Movement == true)
+        {
             transform.position = Vector3.Lerp(point1.transform.position, point2.transform.position, Mathf.PingPong(Time.time * speed, 1.0f));
         }
-
-
     }
-
-    void On(Collider other)
-    {
-        
-    }
-
-
 }
